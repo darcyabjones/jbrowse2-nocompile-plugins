@@ -25,6 +25,7 @@
         sf = (Array.isArray(sf) ? sf : [sf])
 
         let exclude_ = ((exclude === null) || (exclude === '') || (exclude === undefined)) ? [] : (Array.isArray(exclude) ? exclude : [exclude]) 
+          .filter(ei => (ei !== null) && (ei !== undefined))
           .map(ei => ei.toLowerCase());
 
         let at = sf.map(sfi => sfi.get(attribute))
@@ -33,16 +34,16 @@
           at = at.flatMap(ai => ai.split(split))
         }
 
-        at = at.filter(ai => ((ai !== null) || (ai !== '') || (ai !== undefined)));
+        at = at.filter(ai => ((ai !== null) && (ai !== '') && (ai !== undefined)));
 
         at = at.filter(ai => !exclude_.includes(ai.toLowerCase()))
-          .filter(ai => (ai !== null) || (ai !== '') || (ai !== undefined));
+          .filter(ai => (ai !== null) && (ai !== '') && (ai !== undefined));
 
         if (at.length === 0) {
           return null
         }
 
-        at = at.map(decode_gff_specific_bits);
+        at = at.map(ai => decode_gff_specific_bits(ai));
 
         at = [...new Set(at)]
         return at.join(sep)

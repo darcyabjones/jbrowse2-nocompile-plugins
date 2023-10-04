@@ -50,7 +50,7 @@
           }
           dbid = decode_gff_specific_bits(dbid)
 
-          if ((db === null) || (db === '') || (link === undefined)) {
+          if ((db === null) || (db === '') || (db === undefined)) {
             db = "default"
           }
 
