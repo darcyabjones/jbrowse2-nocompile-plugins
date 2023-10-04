@@ -58,9 +58,9 @@ linkout(sep, dict, feature, attribute = 'Dbxref')
 
 Because accessing info pages can sometimes be tricky, we use a simple string substitution to insert details where you need to.
 These resemble [javascript template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals).
-You can use the following variables in your template string (we'll use the fake accession 'DATABASE:1234:567' as an example):
+You can use the following variables in your template string (we'll use the fake accession 'DATABASE:​1234:567' as an example):
 
-- `xref` is the actual whole dbxref entry (e.g. 'DATABASE:1234:5678')
+- `xref` is the actual whole dbxref entry (e.g. 'DATABASE:​1234:5678')
 - `id` is the part after the sep character (e.g. '1234:5678')
 - `db` is the part before the sep character (e.g. 'DATABASE')
 
