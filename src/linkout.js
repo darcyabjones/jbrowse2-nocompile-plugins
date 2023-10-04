@@ -18,6 +18,15 @@
         return path.split('.').reduce((res, key) => res[key] || fallback, obj);
       }
 
+      function decode_gff_specific_bits(s) {
+        let out = decodeURI(s)
+          .replace("%3B", ";")
+          .replace("%2C", ",")
+          .replace("%3D", "=")
+          .replace("%26", "&")
+        return out
+      }
+
       function linkout_base(sep, dict, feature, attribute = "dbxref") {
         if (!feature) {
           return null
@@ -39,16 +48,16 @@
             dbid = db
             db = ''
           }
+          dbid = decode_gff_specific_bits(dbid)
 
-          if ((db === null) || (db === '')) {
+          if ((db === null) || (db === '') || (link === undefined)) {
             db = "default"
           }
 
-          let link = dict[db.replace(/\||\/|-|#|\./, '_')]
-          if (link === null) {
+          let link = dict[db.replace(/\||\/|\-|#|\./g, '_')]
+          if ((link === null) || (link === undefined) || (link === '')) {
             return xr
           }
-
 
           link = interpolate(
             link,
@@ -107,7 +116,10 @@
         RefSeqNuc: 'https://www.ncbi.nlm.nih.gov/nuccore/${id}',
         GenBank: 'https://www.ncbi.nlm.nih.gov/protein/${id}',
         RefSeq: 'https://www.ncbi.nlm.nih.gov/protein/${id}',
+        NCBI_GN: 'https://www.ncbi.nlm.nih.gov/nuccore/${id}',
+        NCBI_GP: 'https://www.ncbi.nlm.nih.gov/protein/${id}',
         PUBMED: 'https://pubmed.ncbi.nlm.nih.gov/${id}/',
+        DOI: 'https://doi.org/${id}',
         CCDS: 'https://www.ncbi.nlm.nih.gov/CCDS/CcdsBrowse.cgi?REQUEST=CCDS&DATA=${id}',
         MIM: 'https://omim.org/entry/${id}',
         HGNC: 'https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/${xref}',
@@ -118,15 +130,12 @@
         taxid: 'https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=${id}',
         PHI: 'http://www.phi-base.org/searchFacet.htm?queryTerm=${xref_colon}',
         PHIG: 'https://poc.molecularconnections.com/phibase-v2/#/search-detail-page/${xref}',
-        ChEBI: 'https://www.ebi.ac.uk/chebi/searchId.do?chebiId=${xref}',
         CHEBI: 'https://www.ebi.ac.uk/chebi/searchId.do?chebiId=${xref}'
       }
 
       const DEFAULT_ONTOLOGY = {
         GO: 'https://amigo.geneontology.org/amigo/term/${xref}',
         SO: 'http://www.sequenceontology.org/browser/current_release/term/${xref}',
-        ChEBI: 'https://www.ebi.ac.uk/chebi/searchId.do?chebiId=${xref}',
-        CHEBI: 'https://www.ebi.ac.uk/chebi/searchId.do?chebiId=${xref}',
         default: 'https://www.ebi.ac.uk/ols4/search?q=${xref}'
       }
 
